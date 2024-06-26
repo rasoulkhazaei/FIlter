@@ -1,31 +1,57 @@
 #include <QXYSeries>
+#include <biquad.h>
+#include "butterworth.h"
 #include "signalTest.h"
 
 SignalTest::SignalTest(QObject *parent) : QObject(parent)
 {}
 
-void SignalTest::update(QAbstractSeries *axialSeries)
+void SignalTest::update(QAbstractSeries *axialSeries, QAbstractSeries *filter)
 {
 
     auto axialxySeries = static_cast<QXYSeries *>(axialSeries);
+
+    auto filterSeries = static_cast<QXYSeries *>(filter);
     m_data.clear();
 
     int f = 100000;
-    int f2 = 1000;
-    int fs = 1000000;
+    int f2 = 50000;
+    int fs = 2083000;
+    int N = 2048;
+    float x[2000];
+    float freq[4096];
     // Append the new data depending on the type
-        for (int j(0); j < mMaxX; j++) {
+        for (int j(0); j < 2000; j++) {
             qreal x(0);
             qreal y(0);
                 // data with sin + random component
                 y = qSin(2 * M_PI * f * j/fs)/* + QRandomGenerator::global()->generateDouble()*/;
             y += qSin(2 * M_PI * f2 * j/fs)/* + QRandomGenerator::global()->generateDouble()*/;
-                x = j;
+                x = (double)j/(double)fs;
 
+            firstData[j] =y;
             m_data.append(QPointF(x, y));
         }
-        // setMaxX(1024/fs);
-    axialxySeries->replace(m_data);
+        auto start = std::chrono::high_resolution_clock::now();
+        ffft::FFTReal <float> fft_object (N);
+        fft_object.do_fft (freq, firstData);
+        float max = 100000.0;
+        int k = 0;
+        for (int i = 0; i < N/2; ++i) {
+            mFiltered.append(QPointF(i, freq[i]));
+        }
+
+        for (int i = 0; i < N/2; ++i) {
+            mFiltered.append(QPointF(i-N/2, freq[N-i]));
+        }
+
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        qDebug() << duration.count();
+        // for (int i = 0; i < N; ++i) {
+        //     mFiltered.append(QPointF(i, freq[i]));
+        // }
+    axialxySeries->replace(mFiltered);
 }
 
 

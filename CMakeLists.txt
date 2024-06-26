@@ -19,6 +19,9 @@ qt_add_qml_module(appuntitled
         Main.qml
         SOURCES signalTest.h signalTest.cpp
         QML_FILES Figure.qml
+        SOURCES biquad.h biquad.cpp
+        SOURCES butterworth.h butterworth.cpp
+        SOURCES fftreal/Array.h fftreal/Array.hpp fftreal/def.h fftreal/DynArray.h fftreal/DynArray.hpp fftreal/FFTReal.h fftreal/FFTReal.hpp fftreal/FFTRealFixLen.h fftreal/FFTRealFixLen.hpp fftreal/FFTRealFixLenParam.h fftreal/FFTRealPassDirect.h fftreal/FFTRealPassDirect.hpp fftreal/FFTRealPassInverse.h fftreal/FFTRealPassInverse.hpp fftreal/FFTRealSelect.h fftreal/FFTRealSelect.hpp fftreal/FFTRealUseTrigo.h fftreal/FFTRealUseTrigo.hpp fftreal/OscSinCos.h fftreal/OscSinCos.hpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

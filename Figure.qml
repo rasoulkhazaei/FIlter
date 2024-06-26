@@ -479,19 +479,19 @@ ColumnLayout {
             visible: dragArea.containsMouse || axialSeries.hovered
         }
 
-        Label {
-            Layout.leftMargin: 10
-            text: "radial: "
-            color: "black"
-            visible: dragArea.containsMouse
-        }
+        // Label {
+        //     Layout.leftMargin: 10
+        //     text: "radial: "
+        //     color: "black"
+        //     visible: dragArea.containsMouse
+        // }
 
-        Label {
-            id: y2Value
-            text: mouseY2.toFixed(5)
-            color: "black"
-            visible: dragArea.containsMouse
-        }
+        // Label {
+        //     id: y2Value
+        //     text: mouseY2.toFixed(5)
+        //     color: "black"
+        //     visible: dragArea.containsMouse
+        // }
     }
 
     ChartView {
@@ -742,14 +742,42 @@ ColumnLayout {
             // useOpenGL: chartView.openGL
         }
 
+        LineSeries {
+            id: filter
+            axisX: axisX
+            axisY: axisY
+            name: "filter"
+            property bool hovered: false
+            onHovered: (point , state)=> {
+                           root.mouseX = point.x
+                           root.mouseY1 = point.y
+
+                           hovered = state
+                       }
+
+            onPressed:  (point) =>{
+                            if (customing != "axial")
+                            return
+                            if (startRadio.checked) {
+                                fileManagerCpp.customStart = point
+                            }
+                            else if (stopRadio.checked) {
+                                fileManagerCpp.customStop = point
+                            }
+
+                        }
+
+            // useOpenGL: chartView.openGL
+        }
+
 
         Timer {
             id: refreshTimer
             interval: 1000
             running: true
-            repeat: true
+            repeat: false
             onTriggered: {
-                figureCpp.update(axialSeries)
+                figureCpp.update(axialSeries, filter)
             }
         }
     }

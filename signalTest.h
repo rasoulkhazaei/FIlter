@@ -3,6 +3,7 @@
 
 #include <QAbstractSeries>
 #include <QObject>
+#include "fftreal/FFTReal.h"
 
 class SignalTest : public QObject
 {
@@ -11,7 +12,7 @@ public:
     SignalTest(QObject *parent = nullptr);
 
 
-    Q_INVOKABLE void update(QAbstractSeries *axialSeries);
+    Q_INVOKABLE void update(QAbstractSeries *axialSeries, QAbstractSeries *filter);
     double minX() const;
     void setMinX(double newMinX);
 
@@ -75,20 +76,22 @@ signals:
 
 private:
     double mMinX{0};
-    double mMaxX{500};
-    double mMaxY{2};
-    double mMinY{-2};
+    double mMaxX{1024};
+    double mMaxY{500};
+    double mMinY{-300};
 
 
     double mMinY2{0};
     double mMaxY2{1600};
-    double mMaxXHome{1000};
-    double mMinXHome{10};
-    double mMaxY1Home{1200};
-    double mMinY1Home{0};
+    double mMaxXHome{0.002};
+    double mMinXHome{0};
+    double mMaxY1Home{2};
+    double mMinY1Home{-2};
     double mMaxY2Home{1600};
     double mMinY2Home{0};
     QList<QPointF> m_data;
+    QList<QPointF> mFiltered;
+    float firstData[2000];
 
     Q_PROPERTY(double minX READ minX WRITE setMinX NOTIFY minXChanged FINAL)
     Q_PROPERTY(double minY READ minY WRITE setMinY NOTIFY minYChanged FINAL)
