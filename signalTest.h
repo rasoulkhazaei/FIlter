@@ -75,8 +75,8 @@ signals:
     void minY2HomeChanged();
 
 private:
-    double mMinX{0};
-    double mMaxX{1024};
+    double mMinX{-1000000};
+    double mMaxX{1000000};
     double mMaxY{500};
     double mMinY{-300};
 
@@ -89,9 +89,9 @@ private:
     double mMinY1Home{-2};
     double mMaxY2Home{1600};
     double mMinY2Home{0};
-    QList<QPointF> m_data;
     QList<QPointF> mFiltered;
-    float firstData[2000];
+    QList<QPointF> mSignal;
+    float firstData[40000];
 
     Q_PROPERTY(double minX READ minX WRITE setMinX NOTIFY minXChanged FINAL)
     Q_PROPERTY(double minY READ minY WRITE setMinY NOTIFY minYChanged FINAL)
